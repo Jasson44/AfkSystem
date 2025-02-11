@@ -1,17 +1,21 @@
 # Plugin version - do not change this value
-version: 1
+version: 1.5
+
+timezone:
+  # Set default timezone for the plugin.
+  # This determines the timezone used by the plugin to handle date and time functions.
+  # Example values: 'UTC', 'Asia/Jakarta', 'America/New_York', 'Europe/London'.
+  # Make sure to use a valid timezone identifier supported by PHP (see https://www.php.net/manual/en/timezones.php).
+  # The timezone affects all time-related actions such as event scheduling, time-based actions, etc.
+  default: ""
 
 # Time in seconds before player is considered AFK
-<<<<<<< HEAD
-afk-time: 120 # 2 Minute
-=======
 afk-time: 10
->>>>>>> 894b5eb (Update 1.5.0)
 
 # Settings for displaying AFK status above player's head
 namedtag:
-  enable: true    # Enable/disable the floating text
-  name: "&f[&cAFK&f] &a{REASON}\n&a{TIME}"    # Format for the floating text
+  enable: true # Enable/disable the floating text
+  name: "&f[&cAFK&f] &a{REASON}\n&a{TIME}" # Format for the floating text
   # Available placeholders:
   # {REASON} - The player's AFK reason
   # {TIME} - Time spent in AFK state
@@ -20,15 +24,15 @@ namedtag:
 
 # Basic plugin functionality settings
 settings:
-  can-attack: false      # If true, AFK players can be damaged
-  can-mention: false     # If true, AFK players can be mentioned in chat
-  reason-letter-length: 30    # Maximum number of characters allowed in AFK reason
+  can-attack: false # If true, AFK players can be damaged
+  can-mention: false # If true, AFK players can be mentioned in chat
+  reason-letter-length: 30 # Maximum number of characters allowed in AFK reason
 
 # Settings for broadcast messages when players go AFK
 broadcast-afk:
-  enable: true    # Enable/disable broadcast messages
-  message: "&ePlayer &a{PLAYER}&e is currently afk, Reason: &a{REASON}"    # Message when player goes AFK
-  no-longer: "&e{PLAYER} &cno longer afk!"    # Message when player returns from AFK
+  enable: true # Enable/disable broadcast messages
+  message: "&ePlayer &a{PLAYER}&e is currently afk, Reason: &a{REASON}" # Message when player goes AFK
+  no-longer: "&e{PLAYER} &cno longer afk!" # Message when player returns from AFK
   # Available placeholders:
   # {PLAYER} - Player's name
   # {REASON} - AFK reason
@@ -36,8 +40,8 @@ broadcast-afk:
 
 # Settings for kicking AFK players
 kick:
-  enable: false    # Enable/disable auto-kick feature
-  message: "&cYou are kicked from the server,\nYou have been afk for {TIME}"    # Kick message
+  enable: false # Enable/disable auto-kick feature
+  message: "&cYou are kicked from the server,\nYou have been afk for {TIME}" # Kick message
   # Available placeholders:
   # {TIME} - Time spent in AFK state
   # \n - New line
@@ -45,9 +49,9 @@ kick:
 
 # Settings for notifying AFK players
 notify:
-  enable: true    # Enable/disable notifications
-  type: "title"   # Notification type (options: title, tip, popup)
-  message: "&cYOU AFK!!:&e{TIME}"    # Notification message
+  enable: true # Enable/disable notifications
+  type: "title" # Notification type (options: title, tip, popup)
+  message: "&cYOU AFK!!:&e{TIME}" # Notification message
   # Available placeholders:
   # {TIME} - Time spent in AFK state
   # Color codes: &c = Red, &e = Yellow
@@ -67,12 +71,12 @@ msg:
 
 # Settings for the AFK form/GUI
 forms:
-  title: "Afk System"    # Title of the form
-  content: "Content"     # Content text in the form
+  title: "Afk System" # Title of the form
+  content: "Content" # Content text in the form
   input-reason:
-    text: "Reason:"     # Label for the reason input field
-    placeholder: "Type your reason here"    # Placeholder text in the input field
-    default: ""         # Default text in the input field
+    text: "Reason:" # Label for the reason input field
+    placeholder: "Type your reason here" # Placeholder text in the input field
+    default: "" # Default text in the input field
 
 # Settings for AFK history logging
 history:
@@ -84,10 +88,79 @@ history:
   # {REASON} - AFK reason
   # {DURATION} - Time spent AFK
 
-  date-format: "Y-m-d H:i:s"    # PHP date format for timestamps
-  auto-delete-days: 7           # Days to keep history (0 = keep forever)
-<<<<<<< HEAD
-  enable: true                  # Enable/disable history logging
-=======
-  enable: true                  # Enable/disable history logging
->>>>>>> 894b5eb (Update 1.5.0)
+  date-format: "Y-m-d H:i:s" # PHP date format for timestamps
+  auto-delete-days: 7 # Days to keep history (0 = keep forever)
+  enable: true # Enable/disable history logging
+
+# Discord Webhook Configuration
+# Note: Empty values ("") will be skipped and not sent to Discord
+
+discord-webhook:
+  # Configuration for when player goes AFK
+  when-afk:
+    enable: true
+    webhook-url: ""
+    message:
+      username: "AFK System" # Bot username in Discord
+      avatar-url: "https://example.com/bot-avatar.png" # Bot avatar in Discord
+      content: "🔔 Player Status Update" # Main message content
+    embed:
+      enable: true
+      title: "Player Gone AFK"
+      description: "**{PLAYER}** is now AFK\n**Reason:** {REASON}\n**Time:** {TIME}"
+      color: "16711680" # Red color in decimal (hex: #FF0000)
+      author:
+        name: "{PLAYER}"
+        url: "" # Optional: Link when author name is clicked
+        icon-url: "https://example.com/player-avatar.png" # Player's avatar
+      field:
+        - title: "Server"
+          description: "Survival Server"
+          inline: true
+        - title: "Location"
+          description: "X: {X}, Y: {Y}, Z: {Z}"
+          inline: true
+      thumbnail: "" # Small image in top right
+      image: "" # Large image below fields
+      footer:
+        content: "AFK System • {DATE}"
+        icon-url: "https://example.com/server-icon.png"
+
+  # Configuration for when player is no longer AFK
+  no-longer:
+    enable: true
+    webhook-url: ""
+    message:
+      username: "AFK System"
+      avatar-url: "https://example.com/bot-avatar.png"
+      content: "🔔 Player Status Update"
+    embed:
+      enable: true
+      title: "Player Returned"
+      description: "**{PLAYER}** is no longer AFK\n**Duration:** {DURATION}"
+      color: "65280" # Green color in decimal (hex: #00FF00)
+      author:
+        name: "{PLAYER}"
+        url: ""
+        icon-url: "https://example.com/player-avatar.png"
+      field:
+        - title: "Previous AFK Reason"
+          description: "{REASON}"
+          inline: false
+        - title: "Total AFK Time"
+          description: "{DURATION}"
+          inline: false
+      thumbnail: ""
+      image: ""
+      footer:
+        content: "AFK System • {DATE}"
+        icon-url: "https://example.com/server-icon.png"
+# Available placeholders:
+# {PLAYER}   - Player name
+# {REASON}   - AFK reason
+# {TIME}     - Current time
+# {DURATION} - Total AFK duration
+# {DATE}     - Current date
+# {X}        - Player X coordinate
+# {Y}        - Player Y coordinate
+# {Z}        - Player Z coordinate
