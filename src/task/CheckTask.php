@@ -6,10 +6,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use xeonch\afksystem\AfkSystem as Main;
-<<<<<<< HEAD
-=======
 use xeonch\afksystem\libs\discordwebhook\DiscordWebhookHelper;
->>>>>>> 894b5eb (Update 1.5.0)
 use xeonch\afksystem\utils\Utils;
 
 class CheckTask extends Task
@@ -52,8 +49,6 @@ class CheckTask extends Task
                             self::$lastBroadcast[$playerName]++;
 
                             if (self::$lastBroadcast[$playerName] == 1) {
-<<<<<<< HEAD
-=======
                                 DiscordWebhookHelper::sendMessage(0, [
                                     "{PLAYER}" => $playerName,
                                     "{REASON}" => $reason,
@@ -63,7 +58,6 @@ class CheckTask extends Task
                                     "{Y}" => (string)Server::getInstance()->getPlayerExact($playerName)->getPosition()->getY(),
                                     "{Z}" => (string)Server::getInstance()->getPlayerExact($playerName)->getPosition()->getZ(),
                                 ]);
->>>>>>> 894b5eb (Update 1.5.0)
                                 Server::getInstance()->broadcastMessage(TextFormat::colorize(str_replace(
                                     ["{PLAYER}", "{TIMER}", "{REASON}"],
                                     [$playerName, Utils::getAFKTime($player), $reason],
