@@ -1,0 +1,93 @@
+# Plugin version - do not change this value
+version: 1
+
+# Time in seconds before player is considered AFK
+<<<<<<< HEAD
+afk-time: 120 # 2 Minute
+=======
+afk-time: 10
+>>>>>>> 894b5eb (Update 1.5.0)
+
+# Settings for displaying AFK status above player's head
+namedtag:
+  enable: true    # Enable/disable the floating text
+  name: "&f[&cAFK&f] &a{REASON}\n&a{TIME}"    # Format for the floating text
+  # Available placeholders:
+  # {REASON} - The player's AFK reason
+  # {TIME} - Time spent in AFK state
+  # \n - New line
+  # Color codes: &f = White, &c = Red, &a = Green
+
+# Basic plugin functionality settings
+settings:
+  can-attack: false      # If true, AFK players can be damaged
+  can-mention: false     # If true, AFK players can be mentioned in chat
+  reason-letter-length: 30    # Maximum number of characters allowed in AFK reason
+
+# Settings for broadcast messages when players go AFK
+broadcast-afk:
+  enable: true    # Enable/disable broadcast messages
+  message: "&ePlayer &a{PLAYER}&e is currently afk, Reason: &a{REASON}"    # Message when player goes AFK
+  no-longer: "&e{PLAYER} &cno longer afk!"    # Message when player returns from AFK
+  # Available placeholders:
+  # {PLAYER} - Player's name
+  # {REASON} - AFK reason
+  # Color codes: &e = Yellow, &a = Green, &c = Red
+
+# Settings for kicking AFK players
+kick:
+  enable: false    # Enable/disable auto-kick feature
+  message: "&cYou are kicked from the server,\nYou have been afk for {TIME}"    # Kick message
+  # Available placeholders:
+  # {TIME} - Time spent in AFK state
+  # \n - New line
+  # Color codes: &c = Red
+
+# Settings for notifying AFK players
+notify:
+  enable: true    # Enable/disable notifications
+  type: "title"   # Notification type (options: title, tip, popup)
+  message: "&cYOU AFK!!:&e{TIME}"    # Notification message
+  # Available placeholders:
+  # {TIME} - Time spent in AFK state
+  # Color codes: &c = Red, &e = Yellow
+
+# Various system messages
+msg:
+  # Message when player leaves AFK state
+  no-longer-afk: "&cYou are no longer afk, your total duration of being afk is {TIME}"
+  # Message shown when someone hits an AFK player
+  hit-when-afk: "&cPlayer &a{PLAYER} &cis afk for &a{TIME}, Reason: {REASON}"
+  # Message when trying to mention an AFK player
+  mention-when-afk: "&cCan't mention &a{PLAYER}&c because he was afk for &a{TIME}, Reason: {REASON}"
+  # Message when trying to go AFK while already AFK
+  already-afk: "&cYou are already afk you can't do afk again"
+  # Message when AFK reason is too long
+  reason-too-long: "&cReason for exceeding text length limit"
+
+# Settings for the AFK form/GUI
+forms:
+  title: "Afk System"    # Title of the form
+  content: "Content"     # Content text in the form
+  input-reason:
+    text: "Reason:"     # Label for the reason input field
+    placeholder: "Type your reason here"    # Placeholder text in the input field
+    default: ""         # Default text in the input field
+
+# Settings for AFK history logging
+history:
+  # Format for history log entries
+  format: "[{DATE}] Player: {PLAYER}, Reason: {REASON}, Duration: {DURATION}"
+  # Available placeholders:
+  # {DATE} - Date and time of entry
+  # {PLAYER} - Player's name
+  # {REASON} - AFK reason
+  # {DURATION} - Time spent AFK
+
+  date-format: "Y-m-d H:i:s"    # PHP date format for timestamps
+  auto-delete-days: 7           # Days to keep history (0 = keep forever)
+<<<<<<< HEAD
+  enable: true                  # Enable/disable history logging
+=======
+  enable: true                  # Enable/disable history logging
+>>>>>>> 894b5eb (Update 1.5.0)

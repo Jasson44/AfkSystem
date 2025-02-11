@@ -1,0 +1,16 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Jasson44/AfkSystem
+build-by-default: true
+branches:
+- master
+projects:
+  AfkSystem:
+    path: ""
+    icon: "assets/icon.png"
+    libs:
+      - src: Vecnavium/FormsUI/FormsUI
+        version: ^1.1.3
+      - src: ACM-PocketMine-MP/Commando/Commando
+        version: ^3.2.0
+    lint:
+      phpstan: false
+...
