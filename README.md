@@ -54,13 +54,9 @@ happy to assist and improve the plugin based on your feedback!
 
 ---
 
-<<<<<<< HEAD
-=======
 ## Update Information
 
 - [1.5.0](changelog/1.5.0.MD)
-
->>>>>>> 894b5eb (Update 1.5.0)
 ## Licence
 
 This project is licensed under the `MIT License` - see the [LICENSE](LICENSE) file for details.
@@ -70,5 +66,5 @@ This project is licensed under the `MIT License` - see the [LICENSE](LICENSE) fi
 ## TODO
 If you have any feature suggestions, open issues
 - [X] History player
-- [ ] Discord Webhook Support
+- [X] Discord Webhook Support
 - [ ] Leaderboard ?
