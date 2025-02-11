@@ -1,29 +1,5 @@
 <?php
 
-/**
-MIT License
-
-Copyright (c) 2025 Jasson44
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
 declare(strict_types=1);
 
 namespace xeonch\afksystem;
@@ -36,6 +12,9 @@ use pocketmine\utils\SingletonTrait;
 use pocketmine\utils\TextFormat;
 use Vecnavium\FormsUI\FormsUI;
 use xeonch\afksystem\commands\AfkCommand;
+use xeonch\afksystem\libs\discordwebhook\DiscordWebhook;
+use xeonch\afksystem\libs\discordwebhook\DiscordWebhookHelper;
+use xeonch\afksystem\libs\discordwebhook\exception\DiscordWebhookException;
 use xeonch\afksystem\task\CheckTask;
 use xeonch\afksystem\utils\History;
 use xeonch\afksystem\utils\Utils;
@@ -45,8 +24,10 @@ class AfkSystem extends PluginBase
 
     use SingletonTrait;
 
-    protected const CONFIG_VERSION = 1;
+    protected const CONFIG_VERSION = 1.5;
 
+    public ?DiscordWebhook $discordWebhookAFK = null;
+    public ?DiscordWebhook $discordWebhookNoLonger = null;
 
     public function onLoad(): void
     {
@@ -63,7 +44,7 @@ class AfkSystem extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getScheduler()->scheduleRepeatingTask(new CheckTask(), 20);
         $this->loadVirions();
-        $this->getServer()->getCommandMap()->register("afksystem", new AfkCommand($this, "afksystem", "Set your afk status", ["afk"]));
+        $this->discordWebhookCheck();
         $this->getServer()->getCommandMap()->register("afk", new AfkCommand($this, "afk", "Set your afk status", ["afksystem"]));
     }
 
@@ -100,6 +81,17 @@ class AfkSystem extends PluginBase
                     $this->getServer()->broadcastMessage(TextFormat::colorize(str_replace(["{PLAYER}", "{TIMER}", "{REASON}"], [$player->getName(), Utils::getAFKTime($player), $reason], $this->getConfig()->get("broadcast-afk")["no-longer"])));
                 }
                 $this->sendMessage($player, TextFormat::colorize(str_replace("{TIME}", Utils::getAFKTime($player), $this->getConfig()->get("msg")["no-longer-afk"])));
+
+                DiscordWebhookHelper::sendMessage(1, [
+                    "{DURATION}" => Utils::getAFKTime($player),
+                    "{REASON}" => $reason,
+                    "{PLAYER}" => $player->getName(),
+                    "{TIME}" => date("H:i:s"),
+                    "{DATE}" => date("d F Y"),
+                    "{X}" => (string)$player->getPosition()->getX(),
+                    "{Y}" => (string)$player->getPosition()->getY(),
+                    "{Z}" => (string)$player->getPosition()->getZ(),
+                ]);
 
                 $session->setReason("");
             }
@@ -140,6 +132,47 @@ class AfkSystem extends PluginBase
             "popup" => $player->sendPopup($message),
             default => $player->sendMessage($message)
         };
+    }
+
+
+    /**
+     */
+    protected function discordWebhookCheck(): void
+    {
+        // When AFK Discord Webhook Check
+        $cfg = $this->getConfig()->get("discord-webhook", []);
+
+        // Cek webhook "when-afk"
+        if (!isset($cfg['when-afk']["enable"]) || !$cfg['when-afk']["enable"]) {
+            $this->getLogger()->info("Discord webhook when afk is disabled");
+        } else {
+            try {
+                if (!empty($cfg['when-afk']["webhook-url"]) && is_string($cfg['when-afk']["webhook-url"])) {
+                    $this->discordWebhookAFK = new DiscordWebhook(trim($cfg['when-afk']["webhook-url"]));
+                    $this->getLogger()->info("AFK Discord webhook URL has been set");
+                } else {
+                    throw new DiscordWebhookException("Discord webhook is active but URL is missing for AFK.");
+                }
+            } catch (DiscordWebhookException $e) {
+                $this->getLogger()->error($e->getMessage());
+            }
+        }
+
+        // When No Longer AFK Discord Webhook Check
+        if (!isset($cfg['no-longer']["enable"]) || !$cfg['no-longer']["enable"]) {
+            $this->getLogger()->info("Discord webhook when no longer afk is disabled");
+        } else {
+            try {
+                if (!empty($cfg['no-longer']["webhook-url"]) && is_string($cfg['no-longer']["webhook-url"])) {
+                    $this->discordWebhookNoLonger = new DiscordWebhook(trim($cfg['no-longer']["webhook-url"]));
+                    $this->getLogger()->info("No longer AFK Discord webhook URL has been set");
+                } else {
+                    throw new DiscordWebhookException("Discord webhook is active but URL is missing for No Longer AFK.");
+                }
+            } catch (DiscordWebhookException $e) {
+                $this->getLogger()->error($e->getMessage());
+            }
+        }
     }
 
     /**
