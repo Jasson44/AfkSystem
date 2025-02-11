@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 /**
 MIT License
 
@@ -25,8 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-=======
->>>>>>> 894b5eb (Update 1.5.0)
 declare(strict_types=1);
 
 namespace xeonch\afksystem;
@@ -66,11 +63,8 @@ class AfkSystem extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getScheduler()->scheduleRepeatingTask(new CheckTask(), 20);
         $this->loadVirions();
-<<<<<<< HEAD
         $this->getServer()->getCommandMap()->register("afksystem", new AfkCommand($this, "afksystem", "Set your afk status", ["afk"]));
-=======
         $this->getServer()->getCommandMap()->register("afk", new AfkCommand($this, "afk", "Set your afk status", ["afksystem"]));
->>>>>>> 894b5eb (Update 1.5.0)
     }
 
     /**
